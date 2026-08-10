@@ -1,4 +1,4 @@
-package com.tss.shorty.entity;
+package com.tss.shorty.entity.enums;
 
 public enum Role {
     ROLE_ADMIN,

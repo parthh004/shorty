@@ -1,5 +1,6 @@
 package com.tss.shorty.entity;
 
+import com.tss.shorty.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
