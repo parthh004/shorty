@@ -37,10 +37,11 @@ public class User
     private String email;
 
     @Column(nullable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(nullable = false)
-    private Boolean isActive = true;
+    private Boolean isActive = false;
 
     @Column(nullable = false)
     private Boolean isEmailVerified = false;
