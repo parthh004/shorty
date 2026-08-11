@@ -1,9 +1,6 @@
 package com.tss.shorty.controller;
 
-import com.tss.shorty.payload.request.LoginRequestDto;
-import com.tss.shorty.payload.request.RegistrationRequestDto;
-import com.tss.shorty.payload.request.ResendOtpRequestDto;
-import com.tss.shorty.payload.request.VerifyOtpRequestDto;
+import com.tss.shorty.payload.request.*;
 import com.tss.shorty.payload.response.RegistrationResponseDto;
 import com.tss.shorty.service.IAuthService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -76,5 +73,19 @@ public class AuthController
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         throw new IllegalArgumentException("Invalid or missing token.");
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<RegistrationResponseDto> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDto forgotPasswordRequestDto)
+    {
+        RegistrationResponseDto response = authService.forgotPassword(forgotPasswordRequestDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<RegistrationResponseDto> resetPassword(@Valid @RequestBody ResetPasswordRequestDto resetPasswordRequestDto)
+    {
+        RegistrationResponseDto response = authService.resetPassword(resetPasswordRequestDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

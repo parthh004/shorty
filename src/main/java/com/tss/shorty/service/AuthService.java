@@ -6,14 +6,12 @@ import com.tss.shorty.entity.enums.OtpType;
 import com.tss.shorty.entity.enums.Role;
 import com.tss.shorty.exception.ResourceNotFoundException;
 import com.tss.shorty.mapper.IUserMapper;
-import com.tss.shorty.payload.request.LoginRequestDto;
-import com.tss.shorty.payload.request.RegistrationRequestDto;
-import com.tss.shorty.payload.request.ResendOtpRequestDto;
-import com.tss.shorty.payload.request.VerifyOtpRequestDto;
+import com.tss.shorty.payload.request.*;
 import com.tss.shorty.payload.response.RegistrationResponseDto;
 import com.tss.shorty.repository.ITokenBlacklistRepository;
 import com.tss.shorty.repository.IUserRepository;
 import com.tss.shorty.security.JwtTokenProvider;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +35,8 @@ public class AuthService implements IAuthService
     private final JwtTokenProvider jwtTokenProvider;
     private final ITokenBlacklistRepository tokenBlacklistRepository;
 
+    @Transactional
+    @Override
     public RegistrationResponseDto register(RegistrationRequestDto registrationDto)
     {
         if (userRepository.existsByEmail(registrationDto.getEmail()))
@@ -161,6 +161,60 @@ public class AuthService implements IAuthService
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .message("Logged out successfully.")
+                .build();
+    }
+
+    @Override
+    public RegistrationResponseDto forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto)
+    {
+        User user = userRepository.findByEmail(forgotPasswordRequestDto.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + forgotPasswordRequestDto.getEmail()));
+
+        if (!user.getIsActive() || !user.getIsEmailVerified())
+        {
+            throw new IllegalArgumentException("Account is inactive or unverified.");
+        }
+
+        // Daily Hard Limit (Max 5 Password Reset OTPs per day)
+        LocalDateTime startOfDay = java.time.LocalDate.now().atStartOfDay();
+        int dailyOtpCount = otpService.getOtpRepository().countByUserAndTypeAndCreatedOnAfter(user, OtpType.PASSWORD_RESET, startOfDay);
+
+        if (dailyOtpCount >= 5)
+        {
+            throw new IllegalArgumentException("Daily OTP limit reached. Please try again tomorrow.");
+        }
+
+        // 60-Second Cooldown Timer Check
+        otpService.getOtpRepository().findTopByUserAndTypeOrderByCreatedOnDesc(user, OtpType.PASSWORD_RESET)
+                .ifPresent(lastOtp -> {
+                    LocalDateTime oneMinuteAfterCreation = lastOtp.getCreatedOn().plusMinutes(1);
+                    if (LocalDateTime.now().isBefore(oneMinuteAfterCreation)) {
+                        throw new IllegalArgumentException("Please wait at least 1 minute before requesting a new OTP.");
+                    }
+                });
+
+        otpService.generateAndSendOtp(user, OtpType.PASSWORD_RESET);
+
+        return RegistrationResponseDto.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK.value())
+                .message("Password reset OTP has been sent to your email address.")
+                .build();
+    }
+
+    @Override
+    public RegistrationResponseDto resetPassword(ResetPasswordRequestDto resetPasswordRequestDto)
+    {
+        User user = userRepository.findByEmail(resetPasswordRequestDto.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + resetPasswordRequestDto.getEmail()));
+
+        otpService.verifyOtp(user, resetPasswordRequestDto.getOtp(), OtpType.PASSWORD_RESET);
+
+        user.setPassword(passwordEncoder.encode(resetPasswordRequestDto.getNewPassword()));
+        userRepository.save(user);
+
+        return RegistrationResponseDto.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK.value())
+                .message("Password has been reset successfully. You can now log in with your new password.")
                 .build();
     }
 }

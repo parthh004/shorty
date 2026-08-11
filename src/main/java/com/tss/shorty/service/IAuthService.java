@@ -1,9 +1,6 @@
 package com.tss.shorty.service;
 
-import com.tss.shorty.payload.request.LoginRequestDto;
-import com.tss.shorty.payload.request.RegistrationRequestDto;
-import com.tss.shorty.payload.request.ResendOtpRequestDto;
-import com.tss.shorty.payload.request.VerifyOtpRequestDto;
+import com.tss.shorty.payload.request.*;
 import com.tss.shorty.payload.response.RegistrationResponseDto;
 
 public interface IAuthService
@@ -17,4 +14,8 @@ public interface IAuthService
     String login(LoginRequestDto loginRequestDto);
 
     RegistrationResponseDto logout(String token);
+
+    RegistrationResponseDto forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
+
+    RegistrationResponseDto resetPassword(ResetPasswordRequestDto resetPasswordRequestDto);
 }

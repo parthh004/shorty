@@ -35,8 +35,21 @@ public class OTPService
         otp.setCreatedOn(LocalDateTime.now());
         otp.setExpiryDate(LocalDateTime.now().plusMinutes(10));
         otpRepository.save(otp);
-        String emailContent = EmailConfig.getOtpMessageTemplate(user.getUserName(), otpCode);
-        notificationService.sendNotification(user.getEmail(), "Shorty - Verify Your Email", emailContent);
+
+        String subject;
+        String emailContent;
+
+        if (type == OtpType.PASSWORD_RESET)
+        {
+            subject = "Shorty - Password Reset Request";
+            emailContent = EmailConfig.getPasswordResetTemplate(user.getUserName(), otpCode);
+        }
+        else
+        {
+            subject = "Shorty - Verify Your Email";
+            emailContent = EmailConfig.getOtpMessageTemplate(user.getUserName(), otpCode);
+        }
+        notificationService.sendNotification(user.getEmail(), subject, emailContent);
     }
 
     public boolean verifyOtp(User user, String otpCode, OtpType type)
