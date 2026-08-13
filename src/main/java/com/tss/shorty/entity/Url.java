@@ -27,11 +27,11 @@ public class Url extends Auditable{
     @Column(nullable = false, unique = true)
     private String shortUrl;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String originalUrl;
 
     @Column(nullable = false)
-    private boolean customerAlias = false;
+    private boolean customAlias = false;
 
     @Column(nullable = false)
     private Integer visitLimit;
@@ -50,6 +50,12 @@ public class Url extends Auditable{
 
     @Column(nullable = false)
     private LocalDateTime lastAccessedOn;
+
+    @Column(nullable = false)
+    private boolean isExpired = false;
+
+    @Column(nullable = false)
+    private boolean isExpiryNotified = false;
 
     public Url(User user, String shortUrl, String originalUrl) {
         this.user = user;

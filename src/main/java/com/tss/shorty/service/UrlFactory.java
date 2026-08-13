@@ -34,7 +34,7 @@ public class UrlFactory {
         url.setUser(user);
         url.setShortUrl(shortUrl);
         if (alias != null && !alias.isBlank()) {
-            url.setCustomerAlias(true);
+            url.setCustomAlias(true);
         }
         int maxVisits = configService.getIntegerConfig("MAX_VISITS_FREE_URL");
         int expiryLimit = configService.getIntegerConfig("MAX_VISITS_FREE_URL");

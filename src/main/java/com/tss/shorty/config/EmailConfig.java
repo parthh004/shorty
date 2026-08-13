@@ -23,4 +23,15 @@ public class EmailConfig
                 "<p>Best Regards,<br><strong>The Shorty Team</strong></p>" +
                 "</div>";
     }
+
+    public static String getUrlExpiryTemplate(String to, String shortUrl, String originalUrl) {
+        return "<div style=\"font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;\">" +
+                "<p>Dear <strong>" + to + "</strong>,</p>" +
+                "<p>We are writing to let you know that your shortened URL has expired or reached its maximum visit limit.</p>" +
+                "<p><strong>Short URL:</strong> <a href=\"http://localhost:8080/" + shortUrl + "\">" + shortUrl + "</a><br>" +
+                "<strong>Destination:</strong> " + originalUrl + "</p>" +
+                "<p>If you wish to reactivate this link or add more visits, please log in to your Shorty dashboard and upgrade your limits.</p>" +
+                "<p>Best Regards,<br><strong>The Shorty Team</strong></p>" +
+                "</div>";
+    }
 }

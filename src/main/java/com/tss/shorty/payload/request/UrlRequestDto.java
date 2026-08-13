@@ -15,5 +15,5 @@ public class UrlRequestDto {
     private String originalUrl;
 
     @NotBlank(message = "alias cannot be blank")
-    private String customAlias;
+    private String alias;
 }
