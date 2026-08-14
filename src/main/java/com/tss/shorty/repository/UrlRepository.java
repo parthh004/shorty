@@ -50,4 +50,6 @@ public interface UrlRepository extends JpaRepository<Url, UUID>, JpaSpecificatio
             "AND u.expiryDate > :now")
     Optional<Url> findValidUrlForRedirect(@Param("shortUrl") String shortUrl,
                                           @Param("now") LocalDateTime now);
+
+    Page<Url> findByUser(User user, Pageable pageable);
 }

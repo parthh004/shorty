@@ -23,8 +23,6 @@ public interface IUrlService {
 
     UrlAliasCheckResponseDto checkAliasAvailable(String alias);
 
-    void reinstateUrl(UUID id);
-
     String getOriginalUrl(String shortUrl);
 
     PaginatedDto<UrlDetailResponseDto> getAll(User currentUser, LocalDate expiryDate, LocalDate lastAccessedDate,

@@ -5,14 +5,15 @@ import com.tss.shorty.entity.User;
 import com.tss.shorty.entity.enums.OtpType;
 import com.tss.shorty.entity.enums.Role;
 import com.tss.shorty.exception.ResourceNotFoundException;
-import com.tss.shorty.mapper.IUserMapper;
+import com.tss.shorty.mapper.UserMapper;
 import com.tss.shorty.payload.request.*;
 import com.tss.shorty.payload.response.RegistrationResponseDto;
-import com.tss.shorty.repository.ITokenBlacklistRepository;
-import com.tss.shorty.repository.IUserRepository;
+import com.tss.shorty.repository.TokenBlacklistRepository;
+import com.tss.shorty.repository.UserRepository;
 import com.tss.shorty.security.JwtTokenProvider;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,24 +22,32 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService implements IAuthService
 {
-    private final IUserRepository userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final IUserMapper userMapper;
+    private final UserMapper userMapper;
     private final OTPService otpService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    private final ITokenBlacklistRepository tokenBlacklistRepository;
+    private final TokenBlacklistRepository tokenBlacklistRepository;
+    private final CloudinaryService cloudinaryService;
+    private final CurrentUserProvider currentUserProvider;
+    private final ConfigService configService;
 
     @Transactional
     @Override
     public RegistrationResponseDto register(RegistrationRequestDto registrationDto)
     {
+        String normalizedEmail = registrationDto.getEmail().trim().toLowerCase();
+        registrationDto.setEmail(normalizedEmail);
+
         if (userRepository.existsByEmail(registrationDto.getEmail()))
         {
             throw new IllegalArgumentException("Email is already in use!");
@@ -56,9 +65,23 @@ public class AuthService implements IAuthService
         user.setRole(Role.ROLE_USER);
         user.setIsActive(false);
         user.setIsEmailVerified(false);
-        user.setAvailableSlots(5);
-        userRepository.save(user);
+        int defaultSlots = configService.getIntegerConfig("FREE_URL_QUOTA");
+        user.setAvailableSlots(defaultSlots);
 
+        if(registrationDto.getImage() != null && !registrationDto.getImage().isEmpty())
+        {
+            try
+            {
+                String imageUrl = cloudinaryService.uploadProfilePicture(registrationDto.getImage());
+                user.setProfilePicture(imageUrl);
+            } catch (IOException e)
+            {
+                throw new RuntimeException("Cloudinary upload failed: " + e.getMessage(), e);
+            }
+        }
+
+        userRepository.save(user);
+        log.info("User registered successfully. Verification OTP sent to: {}", user.getEmail());
         otpService.generateAndSendOtp(user, OtpType.EMAIL_VERIFICATION);
 
         return RegistrationResponseDto.builder()
@@ -69,8 +92,12 @@ public class AuthService implements IAuthService
     }
 
     @Override
+    @Transactional
     public RegistrationResponseDto verifyOtp(VerifyOtpRequestDto request)
     {
+        String normalizedEmail = request.getEmail().trim().toLowerCase();
+        request.setEmail(normalizedEmail);
+
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + request.getEmail()));
 
         if (user.getIsEmailVerified())
@@ -83,6 +110,8 @@ public class AuthService implements IAuthService
         user.setIsActive(true);
         userRepository.save(user);
 
+        log.info("Email verified successfully for user: {}", user.getEmail());
+
         return RegistrationResponseDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
@@ -92,8 +121,12 @@ public class AuthService implements IAuthService
 
 
     @Override
+    @Transactional
     public RegistrationResponseDto resendOtp(ResendOtpRequestDto resendOtpRequestDto)
     {
+        String normalizedEmail = resendOtpRequestDto.getEmail().trim().toLowerCase();
+        resendOtpRequestDto.setEmail(normalizedEmail);
+
         User user = userRepository.findByEmail(resendOtpRequestDto.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + resendOtpRequestDto.getEmail()));
 
         if (user.getIsEmailVerified())
@@ -122,6 +155,8 @@ public class AuthService implements IAuthService
 
         otpService.generateAndSendOtp(user, OtpType.EMAIL_VERIFICATION);
 
+        log.info("New verification OTP sent successfully to: {}", user.getEmail());
+
         return RegistrationResponseDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
@@ -132,6 +167,9 @@ public class AuthService implements IAuthService
     @Override
     public String login(LoginRequestDto loginRequestDto)
     {
+        String normalizedEmail = loginRequestDto.getEmail().trim().toLowerCase();
+        loginRequestDto.setEmail(normalizedEmail);
+
         User user = userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + loginRequestDto.getEmail()));
 
         if (!user.getIsEmailVerified() || !user.getIsActive())
@@ -142,7 +180,7 @@ public class AuthService implements IAuthService
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        log.info("User logged in successfully: {}", user.getEmail());
         return jwtTokenProvider.generateToken(authentication);
     }
 
@@ -150,11 +188,18 @@ public class AuthService implements IAuthService
     public RegistrationResponseDto logout(String token)
     {
         String tokenId = jwtTokenProvider.getTokenIdFromToken(token);
+        User user = currentUserProvider.get();
+        String email = user.getEmail();
 
         if(!tokenBlacklistRepository.existsById(tokenId))
         {
             TokenBlacklist tokenBlacklist = new TokenBlacklist(tokenId,jwtTokenProvider.getExpirationDateFromToken(token));
             tokenBlacklistRepository.save(tokenBlacklist);
+            log.info("Token successfully blacklisted for user: {}", email);
+        }
+        else
+        {
+            log.info("Token was already blacklisted for user: {}", email);
         }
 
         return RegistrationResponseDto.builder()
@@ -167,6 +212,9 @@ public class AuthService implements IAuthService
     @Override
     public RegistrationResponseDto forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto)
     {
+        String normalizedEmail = forgotPasswordRequestDto.getEmail().trim().toLowerCase();
+        forgotPasswordRequestDto.setEmail(normalizedEmail);
+
         User user = userRepository.findByEmail(forgotPasswordRequestDto.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + forgotPasswordRequestDto.getEmail()));
 
         if (!user.getIsActive() || !user.getIsEmailVerified())
@@ -193,6 +241,7 @@ public class AuthService implements IAuthService
                 });
 
         otpService.generateAndSendOtp(user, OtpType.PASSWORD_RESET);
+        log.info("Password reset OTP sent successfully to: {}", user.getEmail());
 
         return RegistrationResponseDto.builder()
                 .timestamp(LocalDateTime.now())
@@ -204,12 +253,17 @@ public class AuthService implements IAuthService
     @Override
     public RegistrationResponseDto resetPassword(ResetPasswordRequestDto resetPasswordRequestDto)
     {
+        String normalizedEmail = resetPasswordRequestDto.getEmail().trim().toLowerCase();
+        resetPasswordRequestDto.setEmail(normalizedEmail);
+
         User user = userRepository.findByEmail(resetPasswordRequestDto.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + resetPasswordRequestDto.getEmail()));
 
         otpService.verifyOtp(user, resetPasswordRequestDto.getOtp(), OtpType.PASSWORD_RESET);
 
         user.setPassword(passwordEncoder.encode(resetPasswordRequestDto.getNewPassword()));
         userRepository.save(user);
+
+        log.info("Password reset successfully for user: {}", user.getEmail());
 
         return RegistrationResponseDto.builder()
                 .timestamp(LocalDateTime.now())

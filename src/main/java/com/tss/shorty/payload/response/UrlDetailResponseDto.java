@@ -18,7 +18,7 @@ public class UrlDetailResponseDto {
     private UUID urlId;
     private String shortUrl;
     private String originalUrl;
-    private boolean customerAlias;
+    private boolean customAlias;
 
     // Analytics
     private Integer visitLimit;

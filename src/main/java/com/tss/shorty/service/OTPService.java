@@ -4,7 +4,7 @@ import com.tss.shorty.config.EmailConfig;
 import com.tss.shorty.entity.Otp;
 import com.tss.shorty.entity.User;
 import com.tss.shorty.entity.enums.OtpType;
-import com.tss.shorty.repository.IOtpRepository;
+import com.tss.shorty.repository.OtpRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 public class OTPService
 {
     @Getter
-    private final IOtpRepository otpRepository;
+    private final OtpRepository otpRepository;
     private final INotificationService notificationService;
     private final SecureRandom random = new SecureRandom();
 
-    public OTPService(IOtpRepository otpRepository, @Qualifier("emailNotificationService") INotificationService notificationService)
+    public OTPService(OtpRepository otpRepository, @Qualifier("emailNotificationService") INotificationService notificationService)
     {
         this.otpRepository = otpRepository;
         this.notificationService = notificationService;

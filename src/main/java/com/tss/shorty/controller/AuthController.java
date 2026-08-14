@@ -3,6 +3,7 @@ package com.tss.shorty.controller;
 import com.tss.shorty.payload.request.*;
 import com.tss.shorty.payload.response.RegistrationResponseDto;
 import com.tss.shorty.service.IAuthService;
+import jakarta.mail.Multipart;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +30,15 @@ public class AuthController
         this.authService = authService;
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<RegistrationResponseDto> register(@Valid @RequestPart(value = "data") RegistrationRequestDto registrationDto, @RequestPart(required = false, value = "image")MultipartFile image)
+    {
+        registrationDto.setImage(image);
+        RegistrationResponseDto response = authService.register(registrationDto);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/register")
     public ResponseEntity<RegistrationResponseDto> register(@Valid @RequestBody RegistrationRequestDto registrationDto)
     {
         RegistrationResponseDto response = authService.register(registrationDto);

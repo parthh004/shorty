@@ -26,7 +26,7 @@ public class UrlExpiryNotificationJob {
     }
 
     @Transactional
-    @Scheduled(cron = "0 */1 * * * *") // runs every hour (sec, min, hour, day of month, month, day of week)
+    @Scheduled(cron = "0 0 * * * *") // runs every hour (sec, min, hour, day of month, month, day of week)
     public void processExpiredUrls() {
         log.info("notification job ran");
         List<Url> expiredUrls = urlRepository.findUrlsRequiringExpiryNotification(LocalDateTime.now());

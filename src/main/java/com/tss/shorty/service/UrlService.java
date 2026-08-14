@@ -92,7 +92,6 @@ public class UrlService implements IUrlService {
     @Override
     public void deleteUrlDetails(User user, UUID urlId) {
         Url url = urlRepository.findByIdAndIsActiveTrueAndUser(urlId, user).orElseThrow(() -> new ResourceNotFoundException("url with id:" + urlId + " doesn't exists for user with id:" + user.getUserId()));
-
         url.setActive(false);
         urlRepository.save(url);
     }
@@ -101,16 +100,6 @@ public class UrlService implements IUrlService {
     public UrlAliasCheckResponseDto checkAliasAvailable(String alias) {
         Boolean available = urlRepository.existsByShortUrl(alias);
         return mapper.mapToAliasCheckResponse(alias, available);
-    }
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    public void reinstateUrl(UUID id) {
-        Url url = urlRepository.findByIdAndIsActiveFalse(id).orElseThrow(() -> new ResourceNotFoundException("url with id:" + id + " doesn't exists"));
-
-        url.setActive(true);
-        log.info("url reinstated for id:{}", id);
-        urlRepository.save(url);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.tss.shorty.service;
 
 import com.tss.shorty.entity.User;
 import com.tss.shorty.exception.ResourceNotFoundException;
-import com.tss.shorty.repository.IUserRepository;
+import com.tss.shorty.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
@@ -10,10 +10,10 @@ import org.springframework.web.context.annotation.RequestScope;
 @RequestScope
 @Component
 public class CurrentUserProvider {
-    private final IUserRepository userRepository;
+    private final UserRepository userRepository;
     private User cachedUser;
 
-    public CurrentUserProvider(IUserRepository userRepository) {
+    public CurrentUserProvider(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

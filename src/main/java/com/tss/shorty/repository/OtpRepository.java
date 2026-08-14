@@ -13,9 +13,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface IOtpRepository extends JpaRepository<Otp, UUID>
+public interface OtpRepository extends JpaRepository<Otp, UUID>
 {
-    @Query("SELECT o FROM Otp o WHERE o.user = :user AND o.type = :type ORDER BY o.createdOn DESC")
     Optional<Otp> findTopByUserAndTypeOrderByCreatedOnDesc(@Param("user") User user, @Param("type") OtpType type);
 
     @Query("SELECT COUNT(o) FROM Otp o WHERE o.user = :user AND o.type = :type AND o.createdOn > :date")

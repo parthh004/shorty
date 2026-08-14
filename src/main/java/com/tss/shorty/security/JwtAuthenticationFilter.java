@@ -1,6 +1,6 @@
 package com.tss.shorty.security;
 
-import com.tss.shorty.repository.ITokenBlacklistRepository;
+import com.tss.shorty.repository.TokenBlacklistRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,10 +24,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
 {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
-    private final ITokenBlacklistRepository tokenBlacklistRepository;
+    private final TokenBlacklistRepository tokenBlacklistRepository;
     private final HandlerExceptionResolver resolver;
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService, ITokenBlacklistRepository tokenBlacklistRepository, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver)
+    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService, TokenBlacklistRepository tokenBlacklistRepository, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver)
     {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
@@ -58,6 +58,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
                 // 3. Extract email and load user
                 String email = jwtTokenProvider.getEmailFromToken(token);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+                if (!userDetails.isEnabled())
+                {
+                    throw new BadCredentialsException("Your account has been blocked by the administrator.");
+                }
 
                 // 4. Set Authentication in Security Context
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
