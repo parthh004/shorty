@@ -2,6 +2,7 @@ package com.tss.shorty.repository;
 
 import com.tss.shorty.entity.Url;
 import com.tss.shorty.entity.User;
+import com.tss.shorty.payload.response.UrlCacheResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -50,4 +51,6 @@ public interface UrlRepository extends JpaRepository<Url, UUID>, JpaSpecificatio
             "AND u.expiryDate > :now")
     Optional<Url> findValidUrlForRedirect(@Param("shortUrl") String shortUrl,
                                           @Param("now") LocalDateTime now);
+
+    Page<Url> findByUser(User user, Pageable pageable);
 }

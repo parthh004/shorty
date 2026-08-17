@@ -1,6 +1,6 @@
 package com.tss.shorty.controller;
 
-import com.tss.shorty.service.UrlService;
+import com.tss.shorty.service.impl.UrlService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class RedirectController {
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String shortUrl) {
-        String originalUrl = urlService.getOriginalUrl(shortUrl);
+        String originalUrl = urlService.resolveLongUrlFromShortUrl(shortUrl);
 
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(originalUrl))

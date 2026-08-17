@@ -34,4 +34,50 @@ public class EmailConfig
                 "<p>Best Regards,<br><strong>The Shorty Team</strong></p>" +
                 "</div>";
     }
+
+    public static String getAccountBlockedTemplate(String userName)
+    {
+        return "<div style=\"font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;\">" +
+                "<p>Dear <strong>" + userName + "</strong>,</p>" +
+                "<p>We regret to inform you that your Shorty account has been <strong>blocked</strong> by an administrator due to a violation of our terms of service or suspicious/illegal activities.</p>" +
+                "<p>If you believe this is a mistake, please contact support.</p>" +
+                "<p>Best Regards,<br><strong>The Shorty Team</strong></p>" +
+                "</div>";
+    }
+
+    public static String getAccountUnblockedTemplate(String userName)
+    {
+        return "<div style=\"font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;\">" +
+                "<p>Dear <strong>" + userName + "</strong>,</p>" +
+                "<p>Good news! Your Shorty account has been <strong>unblocked</strong> by an administrator. You can now log in and continue using our services.</p>" +
+                "<p>Please ensure you adhere to our terms of service to avoid future interruptions.</p>" +
+                "<p>Best Regards,<br><strong>The Shorty Team</strong></p>" +
+                "</div>";
+    }
+
+
+    public static String getAuditLogExportTemplate(String userName) {
+        return "<div style=\"font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; color: #333;\">" +
+                "<h2 style=\"color: #0056b3;\">Audit Logs Export Complete</h2>" +
+                "<p>Dear <strong>" + userName + "</strong>,</p>" +
+                "<p>Your requested Audit Logs report has been successfully generated.</p>" +
+                "<p>Please find the attached <strong>CSV file</strong> containing the system activity logs based on your selected filters. You can easily open this file using Microsoft Excel, Google Sheets, or any standard spreadsheet software to search, sort, and analyze the data.</p>" +
+                "<br>" +
+                "<p>Best Regards,<br><strong>The Shorty Team</strong></p>" +
+                "<div style=\"font-size: 12px; color: #777; margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee;\">" +
+                "<em><strong>Security Notice:</strong> This report contains sensitive system activity. Please handle this file securely and in accordance with your organization's data privacy policies.</em>" +
+                "</div>" +
+                "</div>";
+    }
+
+    public static String getAccountDeletionTemplate(String to) {
+        return "<div style=\"font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;\">" +
+                "<p>Dear <strong>" + to + "</strong>,</p>" +
+                "<p>We are writing to inform you that your Shorty account is scheduled for deletion because the required account verification was not completed within the specified time.</p>" +
+                "<p>As a result, your account and associated data will no longer be available, and you will not be able to access our services using this account.</p>" +
+                "<p>If you would like to continue using Shorty, you can register for a new account and complete the verification process to start using our services again.</p>" +
+                "<p>We appreciate your understanding and hope to have you back with us.</p>" +
+                "<p>Best Regards,<br><strong>The Shorty Team</strong></p>" +
+                "</div>";
+    }
 }

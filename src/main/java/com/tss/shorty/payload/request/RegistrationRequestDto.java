@@ -4,6 +4,7 @@ import com.tss.shorty.entity.enums.Role;
 import com.tss.shorty.util.Validator;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -26,9 +27,6 @@ public class RegistrationRequestDto
     @NotBlank(message = "Password is required")
     @Pattern(regexp = Validator.PASSWORD_REGEX, message = "Password must be at least 8 characters long, contain at least one digit, one lowercase, one uppercase, and one special character")
     private String password;
-//
-//    @NotNull(message = "Role is required")
-//    private Role role;
 
-    private String profilePicture;
+    private MultipartFile image;
 }

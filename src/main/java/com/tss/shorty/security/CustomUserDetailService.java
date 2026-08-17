@@ -1,9 +1,7 @@
 package com.tss.shorty.security;
 
 import com.tss.shorty.entity.User;
-import com.tss.shorty.repository.IUserRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.tss.shorty.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +17,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService
 {
-    private final IUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException
@@ -28,6 +26,7 @@ public class CustomUserDetailService implements UserDetailsService
 
         GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
 
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), Collections.singleton(authority));
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.getIsActive(), true, true, true, Collections.singleton(authority)
+        );
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/urls")
+@PreAuthorize("hasRole('USER')")
 public class UrlController {
     private static final Logger log = LoggerFactory.getLogger(UrlController.class);
     private final IUrlService urlService;
@@ -59,7 +61,6 @@ public class UrlController {
     @DeleteMapping("/{urlId}")
     public ResponseEntity<Void> deleteUrlDetails(@PathVariable UUID urlId) {
         User user = currentUserProvider.get();
-
         urlService.deleteUrlDetails(user, urlId);
         log.info("url deleted");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -69,12 +70,6 @@ public class UrlController {
     public ResponseEntity<UrlAliasCheckResponseDto> checkAlias(@RequestParam String alias) {
         UrlAliasCheckResponseDto responseDto = urlService.checkAliasAvailable(alias);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    @PatchMapping("{id}/reinstate")
-    public ResponseEntity<Void> reinstateUrl(@PathVariable UUID id) {
-        urlService.reinstateUrl(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping
