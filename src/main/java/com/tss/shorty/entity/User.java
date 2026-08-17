@@ -37,10 +37,11 @@ public class User
     private String email;
 
     @Column(nullable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(nullable = false)
-    private Boolean isActive = true;
+    private Boolean isActive = false;
 
     @Column(nullable = false)
     private Boolean isEmailVerified = false;
@@ -58,4 +59,18 @@ public class User
     @Column(nullable = false)
     @UpdateTimestamp
     private Timestamp updatedOn;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNo='" + phoneNo + '\'' +
+                ", email='" + email + '\'' +
+                ", availableSlots=" + availableSlots +
+                ", createdOn=" + createdOn +
+                ", updatedOn=" + updatedOn +
+                '}';
+    }
 }
