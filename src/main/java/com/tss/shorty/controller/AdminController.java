@@ -84,4 +84,24 @@ public class AdminController
         return ResponseEntity.ok(adminService.getAuditLogs(action, startDate, endDate, pageable));
     }
 
+    @PostMapping("/audit-logs/export")
+    public ResponseEntity<RegistrationResponseDto> exportAuditLogs(@RequestBody(required = false) AuditLogExportRequestDto request)
+    {
+        if (request == null)
+        {
+            request = new AuditLogExportRequestDto();
+        }
+
+        User admin = currentUserProvider.get();
+
+        adminService.exportAuditLogsAsync(request.getAction(), request.getStartDate(), request.getEndDate(), admin);
+
+        RegistrationResponseDto response = RegistrationResponseDto.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK.value())
+                .message("Your report is being generated and will be emailed to you shortly.")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }

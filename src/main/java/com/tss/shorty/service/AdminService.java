@@ -1,5 +1,6 @@
 package com.tss.shorty.service;
 
+import com.tss.shorty.annotation.AuditActivity;
 import com.tss.shorty.config.EmailConfig;
 import com.tss.shorty.entity.AuditLog;
 import com.tss.shorty.entity.Url;
@@ -24,10 +25,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -39,20 +44,16 @@ public class AdminService implements IAdminService
     private final INotificationService notificationService;
     private final UrlRepository urlRepository;
     private final UrlMapper urlMapper;
-    private final ApplicationEventPublisher eventPublisher;
-    private final CurrentUserProvider currentUserProvider;
     private final AuditLogRepository auditLogRepository;
     private final AuditMapper auditMapper;
 
-    public AdminService(UserRepository userRepository, UserMapper userMapper, @Qualifier("emailNotificationService")INotificationService notificationService, UrlRepository urlRepository, UrlMapper urlMapper, ApplicationEventPublisher eventPublisher, CurrentUserProvider currentUserProvider, AuditLogRepository auditLogRepository, AuditMapper auditMapper)
+    public AdminService(UserRepository userRepository, UserMapper userMapper, @Qualifier("emailNotificationService")INotificationService notificationService, UrlRepository urlRepository, UrlMapper urlMapper, AuditLogRepository auditLogRepository, AuditMapper auditMapper)
     {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.notificationService = notificationService;
         this.urlRepository = urlRepository;
         this.urlMapper = urlMapper;
-        this.eventPublisher = eventPublisher;
-        this.currentUserProvider = currentUserProvider;
         this.auditLogRepository = auditLogRepository;
         this.auditMapper = auditMapper;
     }
@@ -72,6 +73,7 @@ public class AdminService implements IAdminService
 
     @Override
     @Transactional
+    @AuditActivity(action = AuditAction.USER_BLOCKED, targetEntity = "USER")
     public UserProfileResponseDto blockUser(UUID userId)
     {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
@@ -81,21 +83,15 @@ public class AdminService implements IAdminService
         String subject = "Important: Your Shorty Account has been Blocked";
         String emailContent = EmailConfig.getAccountBlockedTemplate(user.getUserName());
         notificationService.sendNotification(user.getEmail(), subject, emailContent);
-        log.info("Successfully blocked user ID: {}", userId);
 
-        eventPublisher.publishEvent(new com.tss.shorty.entity.AuditLogEvent(
-                currentUserProvider.get().getRole(),
-                AuditAction.USER_BLOCKED,
-                "USER",
-                userId.toString(),
-                Outcome.SUCCESS
-        ));
+        log.info("Successfully blocked user ID: {}", userId);
 
         return userMapper.toUserProfileResponseDto(savedUser);
     }
 
     @Override
     @Transactional
+    @AuditActivity(action = AuditAction.USER_UNBLOCKED, targetEntity = "USER")
     public UserProfileResponseDto unblockUser(UUID userId)
     {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
@@ -107,20 +103,13 @@ public class AdminService implements IAdminService
         notificationService.sendNotification(user.getEmail(), subject, emailContent);
         log.info("Successfully unblocked user ID: {}", userId);
 
-        eventPublisher.publishEvent(new com.tss.shorty.entity.AuditLogEvent(
-                currentUserProvider.get().getRole(),
-                AuditAction.USER_UNBLOCKED,
-                "URL",
-                userId.toString(),
-                Outcome.SUCCESS
-        ));
-
         return userMapper.toUserProfileResponseDto(savedUser);
 
     }
 
     @Override
     @Transactional
+    @AuditActivity(action = AuditAction.URL_BLOCKED, targetEntity = "URL")
     public UrlDetailResponseDto blockUrl(UUID urlId)
     {
         Url url = urlRepository.findById(urlId).orElseThrow(() -> new ResourceNotFoundException("URL not found with ID: " + urlId));
@@ -128,33 +117,18 @@ public class AdminService implements IAdminService
         Url savedUrl = urlRepository.save(url);
         log.info("Successfully block url ID: {}", urlId);
 
-        eventPublisher.publishEvent(new com.tss.shorty.entity.AuditLogEvent(
-                currentUserProvider.get().getRole(),
-                AuditAction.URL_BLOCKED,
-                "URL",
-                urlId.toString(),
-                Outcome.SUCCESS
-        ));
-
         return urlMapper.mapToUrlDetails(savedUrl);
     }
 
     @Override
     @Transactional
+    @AuditActivity(action = AuditAction.URL_UNBLOCKED, targetEntity = "URL")
     public UrlDetailResponseDto unblockUrl(UUID urlId)
     {
         Url url = urlRepository.findById(urlId).orElseThrow(() -> new ResourceNotFoundException("URL not found with ID: " + urlId));
         url.setActive(true);
         Url savedUrl = urlRepository.save(url);
         log.info("Successfully unblock url ID: {}", urlId);
-
-        eventPublisher.publishEvent(new com.tss.shorty.entity.AuditLogEvent(
-                currentUserProvider.get().getRole(),
-                AuditAction.URL_UNBLOCKED,
-                "URL",
-                urlId.toString(),
-                Outcome.SUCCESS
-        ));
 
         return urlMapper.mapToUrlDetails(savedUrl);
     }
@@ -179,10 +153,35 @@ public class AdminService implements IAdminService
         return PageMapper.toPaginatedDto(page.map(auditMapper::toDto));
     }
 
+    @Async
     @Override
     public void exportAuditLogsAsync(AuditAction action, LocalDate startDate, LocalDate endDate, User admin) {
 
+        log.info("Starting background Audit Log CSV export for user: {}", admin.getEmail());
+
+        Specification<AuditLog> specification = Specification.where(AuditLogSpecification.hasAction(action))
+                .and(AuditLogSpecification.fromDate(startDate))
+                .and(AuditLogSpecification.toDate(endDate));
+
+        List<AuditLog> logs = auditLogRepository.findAll(specification, Sort.by(Sort.Direction.DESC, "createdOn"));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Log ID,Date,Actor,Action,Target Entity,Target ID,Outcome\n");
+
+        for (AuditLog logRecord : logs) {
+            sb.append(logRecord.getId()).append(",")
+                    .append(logRecord.getCreatedOn()).append(",")
+                    .append(logRecord.getActor()).append(",")
+                    .append(logRecord.getAction()).append(",")
+                    .append(logRecord.getTargetEntity()).append(",")
+                    .append(logRecord.getTargetId()).append(",")
+                    .append(logRecord.getOutcome()).append("\n");
+        }
+
+        byte[] fileData = sb.toString().getBytes(StandardCharsets.UTF_8);
+        String fileName = "AuditLogs_Export_" + LocalDate.now().toString() + ".csv";
+
+        String htmlBody = EmailConfig.getAuditLogExportTemplate(admin.getUserName());
+        notificationService.sendEmailWithAttachment(admin.getEmail(), "Your Audit Logs Export", htmlBody, fileData, fileName);
     }
-
-
 }

@@ -56,13 +56,17 @@ public class EmailConfig
     }
 
 
-    public static String getAuditLogExportTemplate(String userName)
-    {
-        return "<div style=\"font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;\">" +
+    public static String getAuditLogExportTemplate(String userName) {
+        return "<div style=\"font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; color: #333;\">" +
+                "<h2 style=\"color: #0056b3;\">Audit Logs Export Complete</h2>" +
                 "<p>Dear <strong>" + userName + "</strong>,</p>" +
-                "<p>Your requested Audit Logs export has been generated successfully.</p>" +
-                "<p>Please find the attached file containing the pipeline-formatted logs based on your selected filters.</p>" +
+                "<p>Your requested Audit Logs report has been successfully generated.</p>" +
+                "<p>Please find the attached <strong>CSV file</strong> containing the system activity logs based on your selected filters. You can easily open this file using Microsoft Excel, Google Sheets, or any standard spreadsheet software to search, sort, and analyze the data.</p>" +
+                "<br>" +
                 "<p>Best Regards,<br><strong>The Shorty Team</strong></p>" +
+                "<div style=\"font-size: 12px; color: #777; margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee;\">" +
+                "<em><strong>Security Notice:</strong> This report contains sensitive system activity. Please handle this file securely and in accordance with your organization's data privacy policies.</em>" +
+                "</div>" +
                 "</div>";
     }
 }

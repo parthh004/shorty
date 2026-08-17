@@ -1,27 +1,20 @@
-2026-08-14T00:00:00.774+05:30  INFO 28924 --- [shorty] [scheduling-1] c.t.shorty.job.UrlExpiryNotificationJob  : notification job ran
-2026-08-14T00:00:01.527+05:30  INFO 28924 --- [shorty] [scheduling-1] c.t.shorty.job.UrlExpiryNotificationJob  : No expired URLs found for notification.
-2026-08-14T00:09:21.618+05:30  INFO 28924 --- [shorty] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
-2026-08-14T00:09:21.651+05:30  INFO 28924 --- [shorty] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
-2026-08-14T00:09:21.670+05:30  INFO 28924 --- [shorty] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-08-14T00:09:21.684+05:30  INFO 28924 --- [shorty] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2026-08-14T00:09:21.700+05:30  INFO 28924 --- [shorty] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2026-08-14T00:09:56.740+05:30  INFO 28760 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : Starting ShortyApplication using Java 22.0.2 with PID 28760 (C:\Users\dev.chauhan\Desktop\shorty\target\classes started by Dev.Chauhan in C:\Users\dev.chauhan\Desktop\shorty)
-2026-08-14T00:09:56.742+05:30  INFO 28760 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : No active profile set, falling back to 1 default profile: "default"
-2026-08-14T00:09:56.798+05:30  INFO 28760 --- [shorty] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-08-14T00:09:56.798+05:30  INFO 28760 --- [shorty] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-08-14T00:09:57.691+05:30  INFO 28760 --- [shorty] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-08-14T00:09:57.786+05:30  INFO 28760 --- [shorty] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 86 ms. Found 6 JPA repository interfaces.
-2026-08-14T00:09:58.611+05:30  INFO 28760 --- [shorty] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-08-14T00:09:58.628+05:30  INFO 28760 --- [shorty] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-08-14T00:09:58.628+05:30  INFO 28760 --- [shorty] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
-2026-08-14T00:09:58.687+05:30  INFO 28760 --- [shorty] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1889 ms
-2026-08-14T00:09:58.909+05:30  INFO 28760 --- [shorty] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-08-14T00:09:59.056+05:30  INFO 28760 --- [shorty] [restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
-2026-08-14T00:09:59.671+05:30  INFO 28760 --- [shorty] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-08-14T00:09:59.702+05:30  INFO 28760 --- [shorty] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-08-14T00:10:00.308+05:30  INFO 28760 --- [shorty] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@c138b93
-2026-08-14T00:10:00.308+05:30  INFO 28760 --- [shorty] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-08-14T00:10:00.437+05:30  INFO 28760 --- [shorty] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-08-17T10:13:15.093+05:30  INFO 27056 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : Starting ShortyApplication using Java 22.0.2 with PID 27056 (C:\Users\dev.chauhan\Desktop\shorty\target\classes started by Dev.Chauhan in C:\Users\dev.chauhan\Desktop\shorty)
+2026-08-17T10:13:15.098+05:30  INFO 27056 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-08-17T10:13:15.171+05:30  INFO 27056 --- [shorty] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-08-17T10:13:15.172+05:30  INFO 27056 --- [shorty] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-08-17T10:13:16.024+05:30  INFO 27056 --- [shorty] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-08-17T10:13:16.095+05:30  INFO 27056 --- [shorty] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 61 ms. Found 6 JPA repository interfaces.
+2026-08-17T10:13:17.031+05:30  INFO 27056 --- [shorty] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-08-17T10:13:17.050+05:30  INFO 27056 --- [shorty] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-08-17T10:13:17.051+05:30  INFO 27056 --- [shorty] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-17T10:13:17.088+05:30  INFO 27056 --- [shorty] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1915 ms
+2026-08-17T10:13:17.298+05:30  INFO 27056 --- [shorty] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-08-17T10:13:17.365+05:30  INFO 27056 --- [shorty] [restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-08-17T10:13:17.809+05:30  INFO 27056 --- [shorty] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-08-17T10:13:17.843+05:30  INFO 27056 --- [shorty] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-08-17T10:13:18.246+05:30  INFO 27056 --- [shorty] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@107cdf3b
+2026-08-17T10:13:18.248+05:30  INFO 27056 --- [shorty] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-08-17T10:13:18.329+05:30  INFO 27056 --- [shorty] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [jdbc:postgresql://localhost:5432/shorty]
 	Database driver: PostgreSQL JDBC Driver
 	Database dialect: PostgreSQLDialect
@@ -33,57 +26,11 @@
 	Pool: DataSourceConnectionProvider
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-08-14T00:10:02.062+05:30  INFO 28760 --- [shorty] [restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-08-14T00:10:02.211+05:30  INFO 28760 --- [shorty] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-08-14T00:10:02.298+05:30  INFO 28760 --- [shorty] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-08-14T00:10:02.602+05:30  WARN 28760 --- [shorty] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-08-14T00:10:03.812+05:30  INFO 28760 --- [shorty] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailService
-2026-08-14T00:10:04.425+05:30  WARN 28760 --- [shorty] [restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [GET /*]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-08-14T00:10:04.531+05:30  INFO 28760 --- [shorty] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-08-14T00:10:04.544+05:30  INFO 28760 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : Started ShortyApplication in 8.402 seconds (process running for 9.328)
-2026-08-14T00:11:20.228+05:30  INFO 28760 --- [shorty] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
-2026-08-14T00:11:20.244+05:30  INFO 28760 --- [shorty] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
-2026-08-14T00:11:20.265+05:30  INFO 28760 --- [shorty] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-08-14T00:11:20.286+05:30  INFO 28760 --- [shorty] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2026-08-14T00:11:20.314+05:30  INFO 28760 --- [shorty] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2026-08-14T12:34:51.225+05:30  INFO 25168 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : Starting ShortyApplication using Java 22.0.2 with PID 25168 (C:\Users\dev.chauhan\Desktop\shorty\target\classes started by Dev.Chauhan in C:\Users\dev.chauhan\Desktop\shorty)
-2026-08-14T12:34:51.228+05:30  INFO 25168 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : No active profile set, falling back to 1 default profile: "default"
-2026-08-14T12:34:51.290+05:30  INFO 25168 --- [shorty] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-08-14T12:34:51.290+05:30  INFO 25168 --- [shorty] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-08-14T12:34:52.215+05:30  INFO 25168 --- [shorty] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-08-14T12:34:52.318+05:30  INFO 25168 --- [shorty] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 98 ms. Found 6 JPA repository interfaces.
-2026-08-14T12:34:53.045+05:30  INFO 25168 --- [shorty] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-08-14T12:34:53.056+05:30  INFO 25168 --- [shorty] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-08-14T12:34:53.056+05:30  INFO 25168 --- [shorty] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
-2026-08-14T12:34:53.100+05:30  INFO 25168 --- [shorty] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1810 ms
-2026-08-14T12:34:53.350+05:30  INFO 25168 --- [shorty] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-08-14T12:34:53.441+05:30  INFO 25168 --- [shorty] [restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
-2026-08-14T12:34:53.887+05:30  INFO 25168 --- [shorty] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-08-14T12:34:53.942+05:30  INFO 25168 --- [shorty] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-08-14T12:34:54.452+05:30  INFO 25168 --- [shorty] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@c138b93
-2026-08-14T12:34:54.452+05:30  INFO 25168 --- [shorty] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-08-14T12:34:54.557+05:30  INFO 25168 --- [shorty] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [jdbc:postgresql://localhost:5432/shorty]
-	Database driver: PostgreSQL JDBC Driver
-	Database dialect: PostgreSQLDialect
-	Database version: 18.4
-	Default catalog/schema: shorty/public
-	Autocommit mode: undefined/unknown
-	Isolation level: READ_COMMITTED [default READ_COMMITTED]
-	JDBC fetch size: none
-	Pool: DataSourceConnectionProvider
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-2026-08-14T12:34:55.833+05:30  INFO 25168 --- [shorty] [restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-08-14T12:34:55.953+05:30  INFO 25168 --- [shorty] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-08-14T12:34:56.032+05:30  INFO 25168 --- [shorty] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-08-14T12:34:56.266+05:30  WARN 25168 --- [shorty] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-08-14T12:34:57.300+05:30  INFO 25168 --- [shorty] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailService
-2026-08-14T12:34:57.821+05:30  WARN 25168 --- [shorty] [restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [GET /*]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-08-14T12:34:57.883+05:30  INFO 25168 --- [shorty] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-08-14T12:34:57.895+05:30  INFO 25168 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : Started ShortyApplication in 7.32 seconds (process running for 8.307)
-2026-08-14T12:35:03.980+05:30  INFO 25168 --- [shorty] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
-2026-08-14T12:35:04.011+05:30  INFO 25168 --- [shorty] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
-2026-08-14T12:35:04.011+05:30  INFO 25168 --- [shorty] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-08-14T12:35:04.011+05:30  INFO 25168 --- [shorty] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2026-08-14T12:35:04.027+05:30  INFO 25168 --- [shorty] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-08-17T10:13:19.606+05:30  INFO 27056 --- [shorty] [restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-08-17T10:13:19.690+05:30  INFO 27056 --- [shorty] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-08-17T10:13:19.781+05:30  INFO 27056 --- [shorty] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-08-17T10:13:20.016+05:30  WARN 27056 --- [shorty] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-08-17T10:13:21.059+05:30  INFO 27056 --- [shorty] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailService
+2026-08-17T10:13:21.634+05:30  WARN 27056 --- [shorty] [restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [GET /*]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-08-17T10:13:21.713+05:30  INFO 27056 --- [shorty] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-08-17T10:13:21.720+05:30  INFO 27056 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : Started ShortyApplication in 7.418 seconds (process running for 8.3)
