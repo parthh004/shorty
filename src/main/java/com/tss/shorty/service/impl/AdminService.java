@@ -80,6 +80,11 @@ public class AdminService implements IAdminService
     public UserProfileResponseDto blockUser(UUID userId)
     {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+
+        if (!user.getIsActive()) {
+            throw new IllegalArgumentException("User is already blocked.");
+        }
+
         user.setIsActive(false);
         User savedUser = userRepository.save(user);
 
@@ -98,6 +103,11 @@ public class AdminService implements IAdminService
     public UserProfileResponseDto unblockUser(UUID userId)
     {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+
+        if (user.getIsActive()) {
+            throw new IllegalArgumentException("User is already active.");
+        }
+
         user.setIsActive(true);
         User savedUser = userRepository.save(user);
 
@@ -116,6 +126,11 @@ public class AdminService implements IAdminService
     public UrlDetailResponseDto blockUrl(UUID urlId)
     {
         Url url = urlRepository.findById(urlId).orElseThrow(() -> new ResourceNotFoundException("URL not found with ID: " + urlId));
+
+        if (!url.isActive()) {
+            throw new IllegalArgumentException("URL is already blocked.");
+        }
+
         url.setActive(false);
         Url savedUrl = urlRepository.save(url);
         log.info("Successfully block url ID: {}", urlId);
@@ -129,6 +144,11 @@ public class AdminService implements IAdminService
     public UrlDetailResponseDto unblockUrl(UUID urlId)
     {
         Url url = urlRepository.findById(urlId).orElseThrow(() -> new ResourceNotFoundException("URL not found with ID: " + urlId));
+
+        if (url.isActive()) {
+            throw new IllegalArgumentException("URL is already active.");
+        }
+
         url.setActive(true);
         Url savedUrl = urlRepository.save(url);
         log.info("Successfully unblock url ID: {}", urlId);
