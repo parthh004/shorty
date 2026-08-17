@@ -1,10 +1,9 @@
-package com.tss.shorty.service;
+package com.tss.shorty.factory;
 
-import com.tss.shorty.entity.SystemConfig;
 import com.tss.shorty.entity.Url;
 import com.tss.shorty.entity.User;
-import com.tss.shorty.exception.ResourceNotFoundException;
-import com.tss.shorty.repository.ConfigRepository;
+import com.tss.shorty.service.ConfigService;
+import com.tss.shorty.service.ShortUrlGenerator;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

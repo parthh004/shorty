@@ -4,6 +4,7 @@ import com.tss.shorty.entity.Otp;
 import com.tss.shorty.entity.User;
 import com.tss.shorty.entity.enums.OtpType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,4 +20,8 @@ public interface OtpRepository extends JpaRepository<Otp, UUID>
 
     @Query("SELECT COUNT(o) FROM Otp o WHERE o.user = :user AND o.type = :type AND o.createdOn > :date")
     int countByUserAndTypeAndCreatedOnAfter(@Param("user") User user, @Param("type") OtpType type, @Param("date") LocalDateTime date);
+
+    @Modifying
+    @Query("DELETE FROM Otp o WHERE o.expiryDate < :bufferTime OR o.used = true")
+    int deleteOldAndUsedOtp(@Param("bufferTime") LocalDateTime bufferTime);
 }

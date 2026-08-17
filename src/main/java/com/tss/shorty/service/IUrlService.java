@@ -27,4 +27,6 @@ public interface IUrlService {
 
     PaginatedDto<UrlDetailResponseDto> getAll(User currentUser, LocalDate expiryDate, LocalDate lastAccessedDate,
                                               Boolean hasCustomAlias, Boolean hasExpired, Pageable pageable);
+
+    void renewUrl(UUID urlId, User user, int extraVisits, int extraDays);
 }

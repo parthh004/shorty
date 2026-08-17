@@ -1,10 +1,11 @@
-package com.tss.shorty.service;
+package com.tss.shorty.service.impl;
 
 import com.tss.shorty.config.EmailConfig;
 import com.tss.shorty.entity.Otp;
 import com.tss.shorty.entity.User;
 import com.tss.shorty.entity.enums.OtpType;
 import com.tss.shorty.repository.OtpRepository;
+import com.tss.shorty.service.INotificationService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

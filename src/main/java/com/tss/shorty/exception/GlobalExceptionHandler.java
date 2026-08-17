@@ -3,6 +3,7 @@ package com.tss.shorty.exception;
 import com.tss.shorty.exception.error.BaseError;
 import com.tss.shorty.exception.error.ValidationError;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -116,4 +117,36 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<BaseError> handleGenericException(Exception ex) {
+        BaseError error = BaseError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value()) // 500
+                .error("Internal Server Error")
+                .message("An unexpected error occurred: " + ex.getMessage())
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<BaseError> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        BaseError error = BaseError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.CONFLICT.value()) // 409 Conflict
+                .error("Database Conflict")
+                .message("A database constraint was violated. Please check for missing required fields or duplicate keys.")
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InterruptedException.class)
+    public ResponseEntity<BaseError> handleInterruptedException(InterruptedException ex) {
+        BaseError error = BaseError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value()) // 409 Conflict
+                .error("Database Conflict")
+                .message("A database constraint was violated. Please check for missing required fields or duplicate keys.")
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
 }

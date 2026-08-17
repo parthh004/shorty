@@ -69,4 +69,15 @@ public class EmailConfig
                 "</div>" +
                 "</div>";
     }
+
+    public static String getAccountDeletionTemplate(String to) {
+        return "<div style=\"font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;\">" +
+                "<p>Dear <strong>" + to + "</strong>,</p>" +
+                "<p>We are writing to inform you that your Shorty account is scheduled for deletion because the required account verification was not completed within the specified time.</p>" +
+                "<p>As a result, your account and associated data will no longer be available, and you will not be able to access our services using this account.</p>" +
+                "<p>If you would like to continue using Shorty, you can register for a new account and complete the verification process to start using our services again.</p>" +
+                "<p>We appreciate your understanding and hope to have you back with us.</p>" +
+                "<p>Best Regards,<br><strong>The Shorty Team</strong></p>" +
+                "</div>";
+    }
 }

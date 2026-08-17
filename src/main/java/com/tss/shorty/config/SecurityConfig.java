@@ -56,6 +56,7 @@ public class SecurityConfig
 
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**", "/error").permitAll()
+                        .requestMatchers("/api/v1/pricing", "/error").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/users/**", "/api/v1/urls/**", "/api/v1/products/**").hasRole("USER")
                         .anyRequest().authenticated());

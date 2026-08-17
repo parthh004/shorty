@@ -1,26 +1,28 @@
-package com.tss.shorty.service;
+package com.tss.shorty.service.impl;
 
 import com.tss.shorty.entity.Url;
 import com.tss.shorty.entity.User;
 import com.tss.shorty.exception.ResourceAlreadyExistsException;
 import com.tss.shorty.exception.ResourceNotFoundException;
 import com.tss.shorty.exception.UrlApiException;
+import com.tss.shorty.mapper.CachedUrlMapper;
 import com.tss.shorty.mapper.PageMapper;
 import com.tss.shorty.mapper.UrlMapper;
 import com.tss.shorty.payload.request.UrlRequestDto;
 import com.tss.shorty.payload.request.UrlUpdateDto;
-import com.tss.shorty.payload.response.PaginatedDto;
-import com.tss.shorty.payload.response.UrlAliasCheckResponseDto;
-import com.tss.shorty.payload.response.UrlDetailResponseDto;
-import com.tss.shorty.payload.response.UrlResponseDto;
+import com.tss.shorty.payload.response.*;
 import com.tss.shorty.repository.UrlRepository;
+import com.tss.shorty.service.IUrlService;
+import com.tss.shorty.factory.UrlFactory;
+import com.tss.shorty.service.UrlCacheService;
 import com.tss.shorty.util.UrlSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,12 +35,14 @@ public class UrlService implements IUrlService {
     private final UrlRepository urlRepository;
     private final UrlFactory urlFactory;
     private final UrlMapper mapper;
+    private final UrlCacheService urlCacheService;
     private static final Logger log = LoggerFactory.getLogger(UrlService.class);
 
-    public UrlService(UrlRepository urlRepository, UrlFactory urlFactory, UrlMapper mapper) {
+    public UrlService(UrlRepository urlRepository, UrlFactory urlFactory, UrlMapper mapper, UrlCacheService urlCacheService) {
         this.urlRepository = urlRepository;
         this.urlFactory = urlFactory;
         this.mapper = mapper;
+        this.urlCacheService = urlCacheService;
     }
 
     @Override
@@ -139,6 +143,53 @@ public class UrlService implements IUrlService {
 
         Page<Url> page = urlRepository.findAll(specification, pageable);
         return PageMapper.toPaginatedDto(page.map(mapper::mapToUrlDetails));
+    }
+
+    @Override
+    public void renewUrl(UUID urlId, User user, int extraVisits, int extraDays) {
+        Url url = urlRepository.findByIdAndIsActiveTrueAndUser(urlId, user)
+                .orElseThrow(() -> new ResourceNotFoundException("No url found with id:" + urlId));
+
+        int currentRemainingVisits = url.getRemainingVisits();
+        int currentVisitLimit = url.getVisitLimit();
+
+        url.setRemainingVisits(currentRemainingVisits + extraVisits);
+        url.setVisitLimit(currentVisitLimit + extraVisits);
+
+        LocalDateTime currentExpiryDate = url.getExpiryDate().isBefore(LocalDateTime.now())
+                ? LocalDateTime.now()
+                : url.getExpiryDate();
+        url.setExpiryDate(currentExpiryDate.plusDays(extraDays));
+
+        url.setExpired(false);
+        url.setExpiryNotified(false);
+        urlRepository.save(url);
+    }
+
+    public String resolveLongUrlFromShortUrl(String shortCode)  {
+        UrlCacheResponseDto urlCacheResponseDto = urlCacheService.getCachedUrl(shortCode);
+
+        if (urlCacheResponseDto.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new UrlApiException("Url with shortCode:" + shortCode + " has expired");
+        }
+
+        if (urlCacheResponseDto.getRemainingVisits() <= 0) {
+            throw new UrlApiException("Url with shortCode:" + shortCode + " has exhausted the visit");
+        }
+
+        decreamentVisitCount(urlCacheResponseDto.getId());
+
+        return urlCacheResponseDto.getOriginalUrl();
+    }
+
+    @Transactional
+    @Async
+    private void decreamentVisitCount(UUID urlId) {
+        urlRepository.findById(urlId).ifPresent(url -> {
+            url.setRemainingVisits(url.getRemainingVisits() - 1);
+            url.setTotalVisits(url.getTotalVisits() + 1);
+            urlRepository.save(url);
+        });
     }
 
 }

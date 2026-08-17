@@ -1,4 +1,4 @@
-package com.tss.shorty.service;
+package com.tss.shorty.service.impl;
 
 import com.tss.shorty.entity.TokenBlacklist;
 import com.tss.shorty.entity.User;
@@ -11,6 +11,10 @@ import com.tss.shorty.payload.response.RegistrationResponseDto;
 import com.tss.shorty.repository.TokenBlacklistRepository;
 import com.tss.shorty.repository.UserRepository;
 import com.tss.shorty.security.JwtTokenProvider;
+import com.tss.shorty.service.CloudinaryService;
+import com.tss.shorty.service.ConfigService;
+import com.tss.shorty.service.CurrentUserProvider;
+import com.tss.shorty.service.IAuthService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
