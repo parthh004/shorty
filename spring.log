@@ -1,0 +1,54 @@
+2026-08-19T10:52:32.551+05:30  INFO 9960 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : Starting ShortyApplication using Java 18.0.2.1 with PID 9960 (C:\Users\parth.gupta\Desktop\shorty\target\classes started by Parth.Gupta in C:\Users\parth.gupta\Desktop\shorty)
+2026-08-19T10:52:32.634+05:30  INFO 9960 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-08-19T10:52:33.137+05:30  INFO 9960 --- [shorty] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-08-19T10:52:33.144+05:30  INFO 9960 --- [shorty] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-08-19T10:52:43.967+05:30  INFO 9960 --- [shorty] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-08-19T10:52:44.720+05:30  INFO 9960 --- [shorty] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 669 ms. Found 7 JPA repository interfaces.
+2026-08-19T10:52:47.859+05:30  INFO 9960 --- [shorty] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-08-19T10:52:47.920+05:30  INFO 9960 --- [shorty] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-08-19T10:52:47.926+05:30  INFO 9960 --- [shorty] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-19T10:52:48.486+05:30  INFO 9960 --- [shorty] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 15335 ms
+2026-08-19T10:52:49.569+05:30  INFO 9960 --- [shorty] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-08-19T10:52:49.963+05:30  INFO 9960 --- [shorty] [restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-08-19T10:52:54.243+05:30  INFO 9960 --- [shorty] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-08-19T10:52:54.417+05:30  INFO 9960 --- [shorty] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-08-19T10:52:55.616+05:30  INFO 9960 --- [shorty] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@9560e0d
+2026-08-19T10:52:55.621+05:30  INFO 9960 --- [shorty] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-08-19T10:52:55.849+05:30  INFO 9960 --- [shorty] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/shorty]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.4
+	Default catalog/schema: shorty/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-08-19T10:53:01.324+05:30  INFO 9960 --- [shorty] [restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-08-19T10:53:01.715+05:30  INFO 9960 --- [shorty] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-08-19T10:53:02.083+05:30  INFO 9960 --- [shorty] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-08-19T10:53:03.027+05:30  WARN 9960 --- [shorty] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-08-19T10:53:05.880+05:30  INFO 9960 --- [shorty] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailService
+2026-08-19T10:53:08.629+05:30  WARN 9960 --- [shorty] [restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [GET /*]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-08-19T10:53:08.630+05:30  WARN 9960 --- [shorty] [restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [GET /api/v1/urls/check-alias]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-08-19T10:53:08.911+05:30  INFO 9960 --- [shorty] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-08-19T10:53:08.938+05:30  INFO 9960 --- [shorty] [restartedMain] com.tss.shorty.ShortyApplication         : Started ShortyApplication in 40.35 seconds (process running for 44.81)
+2026-08-19T10:53:24.486+05:30  INFO 9960 --- [shorty] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-19T10:53:24.494+05:30  INFO 9960 --- [shorty] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-08-19T10:53:24.505+05:30  INFO 9960 --- [shorty] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+2026-08-19T10:55:12.979+05:30  INFO 9960 --- [shorty] [http-nio-8080-exec-3] c.tss.shorty.service.impl.AuthService    : User logged in successfully: parthh.8320@gmail.com
+2026-08-19T10:58:16.757+05:30  INFO 9960 --- [shorty] [http-nio-8080-exec-5] com.tss.shorty.service.ConfigService     : Attempting to update configuration FREE_URL_QUOTA to new value: 5
+2026-08-19T10:58:16.882+05:30  INFO 9960 --- [shorty] [http-nio-8080-exec-5] com.tss.shorty.service.ConfigService     : Successfully updated configuration FREE_URL_QUOTA
+2026-08-19T10:58:49.186+05:30  INFO 9960 --- [shorty] [http-nio-8080-exec-7] c.tss.shorty.service.impl.AuthService    : User logged in successfully: parthgupta19543@gmail.com
+2026-08-19T11:03:15.355+05:30  INFO 9960 --- [shorty] [http-nio-8080-exec-1] com.tss.shorty.service.UrlCacheService   : ---- THREAD SLEPT FOR 5 SECONDS ----
+2026-08-19T11:04:14.111+05:30  WARN 9960 --- [shorty] [http-nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource api/v1/urls for request '/api/v1/urls/'.]
+2026-08-19T11:11:08.925+05:30  INFO 9960 --- [shorty] [http-nio-8080-exec-9] c.tss.shorty.service.impl.AuthService    : User logged in successfully: parthh.8320@gmail.com
+2026-08-19T11:12:27.449+05:30  INFO 9960 --- [shorty] [task-1] c.tss.shorty.service.impl.AdminService   : Starting background Audit Log CSV export for user: parthh.8320@gmail.com
+2026-08-19T11:12:34.652+05:30  INFO 9960 --- [shorty] [task-1] c.t.s.service.EmailNotificationService   : Email with attachment sent successfully to: parthh.8320@gmail.com
+2026-08-19T11:19:59.820+05:30  INFO 9960 --- [shorty] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-19T11:20:00.115+05:30  INFO 9960 --- [shorty] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-08-19T11:20:00.178+05:30  INFO 9960 --- [shorty] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-08-19T11:20:00.246+05:30  INFO 9960 --- [shorty] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-08-19T11:20:00.259+05:30  INFO 9960 --- [shorty] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

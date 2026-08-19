@@ -19,6 +19,16 @@ public class HazelcastConfig {
                 .setMaxSizePolicy(MaxSizePolicy.PER_NODE)
         );
 
+        MapConfig pricingCacheConfig = new MapConfig("pricing");
+        pricingCacheConfig.setTimeToLiveSeconds(86400); // Keep pricing in RAM for 24 hours
+
+        EvictionConfig evictionConfig = new EvictionConfig();
+        evictionConfig.setMaxSizePolicy(MaxSizePolicy.PER_NODE);
+        evictionConfig.setSize(100);
+        pricingCacheConfig.setEvictionConfig(evictionConfig);
+
+        config.addMapConfig(pricingCacheConfig);
+
         config.addMapConfig(urlCacheConfig);
         return config;
     }
