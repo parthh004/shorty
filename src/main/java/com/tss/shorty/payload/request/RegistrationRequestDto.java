@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class RegistrationRequestDto
 {
     @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+    @Size(min = 3, max = 30, message = "Username must be between 3 and 30 characters")
     private String userName;
 
     @NotBlank(message = "Email is required")

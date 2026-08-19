@@ -9,15 +9,19 @@ import java.util.Map;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseError {
 
     private LocalDateTime timestamp;
     private Integer status;
     private String error;
-    private String message;
-    private String path = ServletUriComponentsBuilder.fromCurrentRequestUri().build().getPath();
+    private String path;
+
+    public BaseError(Integer status, String error) {
+        this.timestamp = LocalDateTime.now();
+        this.status = status;
+        this.error = error;
+        this.path = ServletUriComponentsBuilder.fromCurrentRequestUri().build().getPath();
+    }
 }

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ValidationError {

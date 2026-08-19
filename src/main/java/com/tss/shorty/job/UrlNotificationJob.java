@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -35,7 +36,7 @@ public class UrlNotificationJob {
     }
 
     @Transactional
-    @Scheduled(cron = "0 */1 * * * *") // runs every hour (sec, min, hour, day of month, month, day of week)
+    @Scheduled(cron = "0 0 3 * * *") // runs every hour (sec, min, hour, day of month, month, day of week)
     public void processExpiredUrls() {
         log.info("notification job ran");
         List<Url> expiredUrls = urlRepository.findUrlsRequiringExpiryNotification(LocalDateTime.now());
@@ -55,7 +56,7 @@ public class UrlNotificationJob {
                         userName != null ? userName : userEmail,
                         url.getShortUrl(), url.getOriginalUrl());
                 notificationService.sendNotification(userEmail, subject, emailBody);
-                log.info("email sent to user:{}, email:{}",userName, userEmail);
+                log.info("email sent to user:{}, email:{}", userName, userEmail);
 
                 url.setExpired(true);
                 url.setExpiryNotified(true);
@@ -83,12 +84,12 @@ public class UrlNotificationJob {
     @Transactional
     public void cleanUpUnverifiedUser() {
         log.info("user cleanup job ran");
-        List<User> unverifiedUsers = userRepository.findByIsEmailVerifiedTrue();
+        List<User> unverifiedUsers = userRepository.findByIsEmailVerifiedFalse();
         if (unverifiedUsers.isEmpty()) {
             log.info("No Unverified User found for notification.");
             return;
         }
-
+        List<User> errorUser = new ArrayList<>();
         for (User user : unverifiedUsers) {
             try {
                 String userEmail = user.getEmail();
@@ -98,14 +99,16 @@ public class UrlNotificationJob {
                 String emailBody = EmailConfig.getAccountDeletionTemplate(
                         userName != null ? userName : userEmail);
                 notificationService.sendNotification(userEmail, subject, emailBody);
-                log.info("email sent to user:{}, email:{}",userName, userEmail);
+                log.info("email sent to user:{}, email:{}", userName, userEmail);
 
             } catch (Exception e) {
                 log.error("error occurred while running. message:{}", e.getMessage());
+                errorUser.add(user);
             }
 
         }
         userRepository.deleteAll(unverifiedUsers);
-        log.info("Successfully processed and notified {} users for deletion.", unverifiedUsers.size());
+        log.info("Successfully processed and notified {} users for deletion.", unverifiedUsers.size() - errorUser.size());
+        log.info("Error occurred while notifying {} users for deletion.", errorUser.size());
     }
 }

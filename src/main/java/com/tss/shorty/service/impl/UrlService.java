@@ -102,7 +102,8 @@ public class UrlService implements IUrlService {
 
     @Override
     public UrlAliasCheckResponseDto checkAliasAvailable(String alias) {
-        Boolean available = urlRepository.existsByShortUrl(alias);
+        // returning not of the result because if it is true then that url is taken
+        Boolean available = !urlRepository.existsByShortUrl(alias);
         return mapper.mapToAliasCheckResponse(alias, available);
     }
 
@@ -135,6 +136,7 @@ public class UrlService implements IUrlService {
 
         Specification<Url> specification = Specification
                 .where(UrlSpecification.isActive())
+                .and(UrlSpecification.belongsToUser(currentUser.getUserId()))
                 .and(UrlSpecification.expiresOnDate(expiryDate))
                 .and(UrlSpecification.accessedFromDateToNow(lastAccessedDate))
                 .and(UrlSpecification.hasCustomAlias(hasCustomAlias))

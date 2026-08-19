@@ -21,6 +21,7 @@ public class ConfigController
     @PatchMapping("/{code}")
     public ResponseEntity<SystemConfigResponseDto> updateConfig(@PathVariable("code") String code, @RequestParam("value") String value)
     {
+        code = code.toUpperCase();
         return ResponseEntity.ok(configService.updateConfig(code, value));
     }
 }
