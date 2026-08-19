@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Currency;
 import java.util.UUID;
 
 @RestController
@@ -85,7 +84,7 @@ public class AdminController
     }
 
     @PostMapping("/audit-logs/export")
-    public ResponseEntity<RegistrationResponseDto> exportAuditLogs(@RequestBody(required = false) AuditLogExportRequestDto request)
+    public ResponseEntity<AuthResponseDto> exportAuditLogs(@RequestBody(required = false) AuditLogExportRequestDto request)
     {
         if (request == null)
         {
@@ -96,7 +95,7 @@ public class AdminController
 
         adminService.exportAuditLogsAsync(request.getAction(), request.getStartDate(), request.getEndDate(), admin);
 
-        RegistrationResponseDto response = RegistrationResponseDto.builder()
+        AuthResponseDto response = AuthResponseDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .message("Your report is being generated and will be emailed to you shortly.")

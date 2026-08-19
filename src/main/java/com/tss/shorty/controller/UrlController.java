@@ -7,6 +7,7 @@ import com.tss.shorty.payload.request.UrlUpdateDto;
 import com.tss.shorty.payload.response.*;
 import com.tss.shorty.service.CurrentUserProvider;
 import com.tss.shorty.service.IUrlService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +37,7 @@ public class UrlController {
     }
 
     @PostMapping
-    public ResponseEntity<UrlResponseDto> createUrl(@RequestBody UrlRequestDto requestDto) {
+    public ResponseEntity<UrlResponseDto> createUrl(@Valid @RequestBody UrlRequestDto requestDto) {
         User user = currentUserProvider.get();
         UrlResponseDto responseDto = urlService.createUrl(requestDto, user);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -67,6 +68,7 @@ public class UrlController {
     }
 
     @GetMapping("/check-alias")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<UrlAliasCheckResponseDto> checkAlias(@RequestParam String alias) {
         UrlAliasCheckResponseDto responseDto = urlService.checkAliasAvailable(alias);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -74,7 +76,6 @@ public class UrlController {
 
     @GetMapping
     public ResponseEntity<PaginatedDto<UrlDetailResponseDto>> getAllUrl(
-            @AuthenticationPrincipal User currentUser,
             @RequestParam(value = "expiryDate", required = false)
             @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate expiryDate,
 
@@ -85,6 +86,7 @@ public class UrlController {
             @RequestParam(value = "isExpired", required = false) Boolean hasExpired,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
+        User currentUser = currentUserProvider.get();
         PaginatedDto<UrlDetailResponseDto> paginatedDto = urlService.getAll(
                 currentUser, expiryDate, lastAccessedDate, hasCustomAlias, hasExpired, pageable);
 

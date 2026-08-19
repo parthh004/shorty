@@ -42,7 +42,7 @@ public class SecurityConfig
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 // Completely bypass security for GET requests at the root level (your short URLs)
-                .requestMatchers(HttpMethod.GET, "/*");
+                .requestMatchers(HttpMethod.GET, "/*", "/api/v1/urls/check-alias");
     }
 
     @Bean

@@ -6,6 +6,5 @@ public enum AuditAction
     USER_UNBLOCKED,
     URL_BLOCKED,
     URL_UNBLOCKED,
-    SLOT_PURCHASED,
-    URL_RENEWED
+    URL_TRANSACTION
 }

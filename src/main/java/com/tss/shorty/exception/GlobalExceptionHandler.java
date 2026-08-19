@@ -25,12 +25,7 @@ public class GlobalExceptionHandler {
     // 1. Handle Security & JWT Authentication Errors (401 Unauthorized)
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<BaseError> handleAuthenticationException(Exception ex) {
-        BaseError error = BaseError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.UNAUTHORIZED.value())
-                .error("Unauthorized")
-                .message(ex.getMessage() != null ? ex.getMessage() : "Unauthorized access. Please provide a valid token.")
-                .build();
+        BaseError error = new BaseError(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
@@ -42,35 +37,21 @@ public class GlobalExceptionHandler {
             errorsMap.put(error.getField(), error.getDefaultMessage());
         }
 
-        ValidationError error = ValidationError.builder()
-                .timeStamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(errorsMap)
-                .build();
+        ValidationError error = new ValidationError(HttpStatus.BAD_REQUEST.value(), errorsMap);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     // 3. Handle Business Rules & Duplicate Checks (400 Bad Request)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<BaseError> handleIllegalArgumentException(IllegalArgumentException ex) {
-        BaseError error = BaseError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error("Bad Request")
-                .message(ex.getMessage())
-                .build();
+        BaseError error = new BaseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     // 4. Handle Missing Resources (404 Not Found)
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<BaseError> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        BaseError error = BaseError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.NOT_FOUND.value())
-                .error("Not Found")
-                .message(ex.getMessage())
-                .build();
+        BaseError error =new BaseError(HttpStatus.NOT_FOUND.value(), ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
@@ -85,68 +66,32 @@ public class GlobalExceptionHandler {
                     java.util.Arrays.toString(ife.getTargetType().getEnumConstants()));
         }
 
-        BaseError error = BaseError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error("Bad Request")
-                .message(customMessage)
-                .build();
+        BaseError error = new BaseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<BaseError> handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex) {
-        BaseError error = BaseError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.NOT_FOUND.value())
-                .error("duplicate resource")
-                .message(ex.getMessage())
-                .build();
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        BaseError error = new BaseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<BaseError> handleAccessDeniedExceptionException(AccessDeniedException ex) {
-        BaseError error = BaseError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.FORBIDDEN.value())
-                .error("duplicate resource")
-                .message(ex.getMessage())
-                .build();
+        BaseError error = new BaseError(HttpStatus.FORBIDDEN.value(), ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<BaseError> handleGenericException(Exception ex) {
-        BaseError error = BaseError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value()) // 500
-                .error("Internal Server Error")
-                .message("An unexpected error occurred: " + ex.getMessage())
-                .build();
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<BaseError> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        BaseError error = BaseError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.CONFLICT.value()) // 409 Conflict
-                .error("Database Conflict")
-                .message("A database constraint was violated. Please check for missing required fields or duplicate keys.")
-                .build();
+        BaseError error = new BaseError(HttpStatus.CONFLICT.value(), ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(InterruptedException.class)
-    public ResponseEntity<BaseError> handleInterruptedException(InterruptedException ex) {
-        BaseError error = BaseError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value()) // 409 Conflict
-                .error("Database Conflict")
-                .message("A database constraint was violated. Please check for missing required fields or duplicate keys.")
-                .build();
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<BaseError> handleGenericException(Exception ex) {
+        BaseError error = new BaseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -22,7 +22,7 @@ public class CurrentUserProvider {
             String email = SecurityContextHolder.getContext()
                     .getAuthentication().getName();
             cachedUser = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new ResourceNotFoundException("User with email:" + email + " doesn't exists"));
+                    .orElseThrow(() -> new ResourceNotFoundException("User with email:" + email + " doesn't exists/has been blocked by admin"));
         }
         return cachedUser;
     }

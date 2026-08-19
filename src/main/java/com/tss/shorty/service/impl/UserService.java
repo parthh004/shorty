@@ -28,9 +28,6 @@ public class UserService implements IUserService {
     public UserProfileResponseDto getMyProfile() {
         User user = currentUserProvider.get();
 
-        if (user.getIsActive() == false) {
-            throw new IllegalArgumentException("Your account has been blocked by the administrator.");
-        }
         return userMapper.toUserProfileResponseDto(user);
     }
 

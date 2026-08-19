@@ -1,14 +1,20 @@
 package com.tss.shorty.service.impl;
 
+import com.tss.shorty.annotation.AuditActivity;
 import com.tss.shorty.entity.SystemConfig;
 import com.tss.shorty.entity.Transaction;
 import com.tss.shorty.entity.Url;
 import com.tss.shorty.entity.User;
+import com.tss.shorty.entity.enums.AuditAction;
 import com.tss.shorty.entity.enums.PaymentStatus;
 import com.tss.shorty.entity.enums.TransactionAction;
 import com.tss.shorty.exception.PaymentFailedException;
 import com.tss.shorty.factory.PaymentStrategyFactory;
+import com.tss.shorty.mapper.PageMapper;
+import com.tss.shorty.mapper.TransactionMapper;
+import com.tss.shorty.payload.response.PaginatedDto;
 import com.tss.shorty.payload.response.TransactionRequestDto;
+import com.tss.shorty.payload.response.TransactionResponseDto;
 import com.tss.shorty.repository.TransactionRepository;
 import com.tss.shorty.repository.UserRepository;
 import com.tss.shorty.service.ConfigService;
@@ -16,9 +22,12 @@ import com.tss.shorty.service.ITransactionService;
 import com.tss.shorty.strategy.PaymentStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,23 +38,24 @@ public class TransactionService implements ITransactionService {
     private final PaymentStrategyFactory paymentStrategyFactory;
     private final UrlService urlService;
     private final UserService userService;
-    private final UserRepository userRepository;
+    private final TransactionMapper transactionMapper;
 
     public TransactionService(TransactionRepository transactionRepository,
                               ConfigService configService,
                               PaymentStrategyFactory paymentStrategyFactory,
                               UrlService urlService,
-                              UserService userService,
-                              UserRepository userRepository) {
+                              UserService userService, TransactionMapper transactionMapper
+    ) {
         this.transactionRepository = transactionRepository;
         this.configService = configService;
         this.paymentStrategyFactory = paymentStrategyFactory;
         this.urlService = urlService;
         this.userService = userService;
-        this.userRepository = userRepository;
+        this.transactionMapper = transactionMapper;
     }
 
     @Override
+    @AuditActivity(action = AuditAction.URL_TRANSACTION, targetEntity = "TRANSACTION")
     public Transaction processTransaction(User user, TransactionRequestDto request) {
 
         // 1. Fetch exact pricing from DB to prevent frontend tampering
@@ -87,6 +97,16 @@ public class TransactionService implements ITransactionService {
             transactionRepository.save(transaction);
             throw e; // Rethrow so the controller returns a 400 Bad Request
         }
+    }
+
+    @Override
+    public PaginatedDto<TransactionResponseDto> getAllTransactions(User currentUser, Pageable pageable) {
+        Page<Transaction> transactions = transactionRepository.findAllByUser(currentUser, pageable);
+
+        PaginatedDto<TransactionResponseDto> paginatedDto = PageMapper.toPaginatedDto(
+                transactions.map(transactionMapper::mapTo)
+        );
+        return paginatedDto;
     }
 
     private BigDecimal calculateTransactionAmount(TransactionAction action, int quantity) {

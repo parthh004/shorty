@@ -7,7 +7,7 @@ import com.tss.shorty.entity.enums.Role;
 import com.tss.shorty.exception.ResourceNotFoundException;
 import com.tss.shorty.mapper.UserMapper;
 import com.tss.shorty.payload.request.*;
-import com.tss.shorty.payload.response.RegistrationResponseDto;
+import com.tss.shorty.payload.response.AuthResponseDto;
 import com.tss.shorty.repository.TokenBlacklistRepository;
 import com.tss.shorty.repository.UserRepository;
 import com.tss.shorty.security.JwtTokenProvider;
@@ -47,7 +47,7 @@ public class AuthService implements IAuthService
 
     @Transactional
     @Override
-    public RegistrationResponseDto register(RegistrationRequestDto registrationDto)
+    public AuthResponseDto register(RegistrationRequestDto registrationDto)
     {
         String normalizedEmail = registrationDto.getEmail().trim().toLowerCase();
         registrationDto.setEmail(normalizedEmail);
@@ -88,7 +88,7 @@ public class AuthService implements IAuthService
         log.info("User registered successfully. Verification OTP sent to: {}", user.getEmail());
         otpService.generateAndSendOtp(user, OtpType.EMAIL_VERIFICATION);
 
-        return RegistrationResponseDto.builder()
+        return AuthResponseDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.CREATED.value())
                 .message("User registered successfully! Please verify your email.")
@@ -97,7 +97,7 @@ public class AuthService implements IAuthService
 
     @Override
     @Transactional
-    public RegistrationResponseDto verifyOtp(VerifyOtpRequestDto request)
+    public AuthResponseDto verifyOtp(VerifyOtpRequestDto request)
     {
         String normalizedEmail = request.getEmail().trim().toLowerCase();
         request.setEmail(normalizedEmail);
@@ -116,7 +116,7 @@ public class AuthService implements IAuthService
 
         log.info("Email verified successfully for user: {}", user.getEmail());
 
-        return RegistrationResponseDto.builder()
+        return AuthResponseDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .message("Email verified successfully! You can now log in.")
@@ -126,7 +126,7 @@ public class AuthService implements IAuthService
 
     @Override
     @Transactional
-    public RegistrationResponseDto resendOtp(ResendOtpRequestDto resendOtpRequestDto)
+    public AuthResponseDto resendOtp(ResendOtpRequestDto resendOtpRequestDto)
     {
         String normalizedEmail = resendOtpRequestDto.getEmail().trim().toLowerCase();
         resendOtpRequestDto.setEmail(normalizedEmail);
@@ -161,7 +161,7 @@ public class AuthService implements IAuthService
 
         log.info("New verification OTP sent successfully to: {}", user.getEmail());
 
-        return RegistrationResponseDto.builder()
+        return AuthResponseDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .message("A new OTP has been sent to your email address.")
@@ -189,7 +189,7 @@ public class AuthService implements IAuthService
     }
 
     @Override
-    public RegistrationResponseDto logout(String token)
+    public AuthResponseDto logout(String token)
     {
         String tokenId = jwtTokenProvider.getTokenIdFromToken(token);
         User user = currentUserProvider.get();
@@ -206,7 +206,7 @@ public class AuthService implements IAuthService
             log.info("Token was already blacklisted for user: {}", email);
         }
 
-        return RegistrationResponseDto.builder()
+        return AuthResponseDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .message("Logged out successfully.")
@@ -214,7 +214,7 @@ public class AuthService implements IAuthService
     }
 
     @Override
-    public RegistrationResponseDto forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto)
+    public AuthResponseDto forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto)
     {
         String normalizedEmail = forgotPasswordRequestDto.getEmail().trim().toLowerCase();
         forgotPasswordRequestDto.setEmail(normalizedEmail);
@@ -247,7 +247,7 @@ public class AuthService implements IAuthService
         otpService.generateAndSendOtp(user, OtpType.PASSWORD_RESET);
         log.info("Password reset OTP sent successfully to: {}", user.getEmail());
 
-        return RegistrationResponseDto.builder()
+        return AuthResponseDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .message("Password reset OTP has been sent to your email address.")
@@ -255,7 +255,7 @@ public class AuthService implements IAuthService
     }
 
     @Override
-    public RegistrationResponseDto resetPassword(ResetPasswordRequestDto resetPasswordRequestDto)
+    public AuthResponseDto resetPassword(ResetPasswordRequestDto resetPasswordRequestDto)
     {
         String normalizedEmail = resetPasswordRequestDto.getEmail().trim().toLowerCase();
         resetPasswordRequestDto.setEmail(normalizedEmail);
@@ -269,7 +269,7 @@ public class AuthService implements IAuthService
 
         log.info("Password reset successfully for user: {}", user.getEmail());
 
-        return RegistrationResponseDto.builder()
+        return AuthResponseDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .message("Password has been reset successfully. You can now log in with your new password.")

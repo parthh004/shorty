@@ -65,12 +65,9 @@ public class User
         return "User{" +
                 "userId=" + userId +
                 ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
                 ", phoneNo='" + phoneNo + '\'' +
                 ", email='" + email + '\'' +
                 ", availableSlots=" + availableSlots +
-                ", createdOn=" + createdOn +
-                ", updatedOn=" + updatedOn +
                 '}';
     }
 }

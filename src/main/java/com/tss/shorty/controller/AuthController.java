@@ -1,12 +1,10 @@
 package com.tss.shorty.controller;
 
 import com.tss.shorty.payload.request.*;
-import com.tss.shorty.payload.response.RegistrationResponseDto;
+import com.tss.shorty.payload.response.AuthResponseDto;
 import com.tss.shorty.service.IAuthService;
-import jakarta.mail.Multipart;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -31,43 +29,43 @@ public class AuthController
     }
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<RegistrationResponseDto> register(@Valid @RequestPart(value = "data") RegistrationRequestDto registrationDto, @RequestPart(required = false, value = "image")MultipartFile image)
+    public ResponseEntity<AuthResponseDto> register(@Valid @RequestPart(value = "data") RegistrationRequestDto registrationDto, @RequestPart(required = false, value = "image")MultipartFile image)
     {
         registrationDto.setImage(image);
-        RegistrationResponseDto response = authService.register(registrationDto);
+        AuthResponseDto response = authService.register(registrationDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<RegistrationResponseDto> register(@Valid @RequestBody RegistrationRequestDto registrationDto)
+    public ResponseEntity<AuthResponseDto> register(@Valid @RequestBody RegistrationRequestDto registrationDto)
     {
-        RegistrationResponseDto response = authService.register(registrationDto);
+        AuthResponseDto response = authService.register(registrationDto);
         log.info("user register ongoing");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<RegistrationResponseDto> verifyOtp(@Valid @RequestBody VerifyOtpRequestDto request)
+    public ResponseEntity<AuthResponseDto> verifyOtp(@Valid @RequestBody VerifyOtpRequestDto request)
     {
-        RegistrationResponseDto response = authService.verifyOtp(request);
+        AuthResponseDto response = authService.verifyOtp(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/resend-otp")
-    public ResponseEntity<RegistrationResponseDto> resendOtp(@Valid @RequestBody ResendOtpRequestDto resendOtpRequestDto)
+    public ResponseEntity<AuthResponseDto> resendOtp(@Valid @RequestBody ResendOtpRequestDto resendOtpRequestDto)
     {
-        RegistrationResponseDto response = authService.resendOtp(resendOtpRequestDto);
+        AuthResponseDto response = authService.resendOtp(resendOtpRequestDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<RegistrationResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto)
+    public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto)
     {
         String token = authService.login(loginRequestDto);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
-        RegistrationResponseDto registrationResponseDto = RegistrationResponseDto.builder()
+        AuthResponseDto registrationResponseDto = AuthResponseDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .message("Login successful")
@@ -78,29 +76,29 @@ public class AuthController
 
 
     @PostMapping("/logout")
-    public ResponseEntity<RegistrationResponseDto> logout(HttpServletRequest request)
+    public ResponseEntity<AuthResponseDto> logout(HttpServletRequest request)
     {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer "))
         {
             String token = bearerToken.substring(7);
-            RegistrationResponseDto response = authService.logout(token);
+            AuthResponseDto response = authService.logout(token);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         throw new IllegalArgumentException("Invalid or missing token.");
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<RegistrationResponseDto> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDto forgotPasswordRequestDto)
+    public ResponseEntity<AuthResponseDto> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDto forgotPasswordRequestDto)
     {
-        RegistrationResponseDto response = authService.forgotPassword(forgotPasswordRequestDto);
+        AuthResponseDto response = authService.forgotPassword(forgotPasswordRequestDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<RegistrationResponseDto> resetPassword(@Valid @RequestBody ResetPasswordRequestDto resetPasswordRequestDto)
+    public ResponseEntity<AuthResponseDto> resetPassword(@Valid @RequestBody ResetPasswordRequestDto resetPasswordRequestDto)
     {
-        RegistrationResponseDto response = authService.resetPassword(resetPasswordRequestDto);
+        AuthResponseDto response = authService.resetPassword(resetPasswordRequestDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
