@@ -1,7 +1,10 @@
 package com.tss.shorty.controller;
 
 import com.tss.shorty.payload.request.UpdateUserProfileRequestDto;
+import com.tss.shorty.payload.response.UserProfilePictureResponseDto;
 import com.tss.shorty.payload.response.UserProfileResponseDto;
+import com.tss.shorty.payload.response.UserStatsResponseDto;
+import com.tss.shorty.payload.response.UserUpdateResponseDto;
 import com.tss.shorty.service.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
@@ -30,13 +33,13 @@ public class UserController
     }
 
     @PutMapping("/me")
-    public ResponseEntity<UserProfileResponseDto> updateMyProfile(@Valid @RequestBody UpdateUserProfileRequestDto request)
+    public ResponseEntity<UserUpdateResponseDto> updateMyProfile(@Valid @RequestBody UpdateUserProfileRequestDto request)
     {
         return ResponseEntity.ok(userService.updateMyProfile(request));
     }
 
     @PutMapping(value = "/me/profile-picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UserProfileResponseDto> uploadProfilePicture(@RequestPart("file") MultipartFile file)
+    public ResponseEntity<UserProfilePictureResponseDto> uploadProfilePicture(@RequestPart("file") MultipartFile file)
     {
         return ResponseEntity.ok(userService.uploadProfilePicture(file));
     }
@@ -48,4 +51,8 @@ public class UserController
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/stats")
+    public ResponseEntity<UserStatsResponseDto> getMyStats() {
+        return ResponseEntity.ok(userService.getUserStats());
+    }
 }

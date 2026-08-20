@@ -4,7 +4,11 @@ import com.tss.shorty.entity.User;
 import com.tss.shorty.exception.ResourceAlreadyExistsException;
 import com.tss.shorty.mapper.UserMapper;
 import com.tss.shorty.payload.request.UpdateUserProfileRequestDto;
+import com.tss.shorty.payload.response.UserProfilePictureResponseDto;
 import com.tss.shorty.payload.response.UserProfileResponseDto;
+import com.tss.shorty.payload.response.UserStatsResponseDto;
+import com.tss.shorty.payload.response.UserUpdateResponseDto;
+import com.tss.shorty.repository.UrlRepository;
 import com.tss.shorty.repository.UserRepository;
 import com.tss.shorty.service.CloudinaryService;
 import com.tss.shorty.service.CurrentUserProvider;
@@ -22,6 +26,7 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final CloudinaryService cloudinaryService;
     private final UserMapper userMapper;
+    private final UrlRepository urlRepository;
     private final CurrentUserProvider currentUserProvider;
 
     @Override
@@ -33,7 +38,7 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
-    public UserProfileResponseDto updateMyProfile(UpdateUserProfileRequestDto request) {
+    public UserUpdateResponseDto updateMyProfile(UpdateUserProfileRequestDto request) {
         User user = currentUserProvider.get();
 
         if (!user.getPhoneNo().equals(request.getPhoneNo()) && userRepository.existsByPhoneNo(request.getPhoneNo())) {
@@ -44,12 +49,12 @@ public class UserService implements IUserService {
         user.setPhoneNo(request.getPhoneNo());
 
         User updatedUser = userRepository.save(user);
-        return userMapper.toUserProfileResponseDto(updatedUser);
+        return userMapper.toUserUpdateResponseDto(updatedUser);
     }
 
     @Override
     @Transactional
-    public UserProfileResponseDto uploadProfilePicture(MultipartFile file) {
+    public UserProfilePictureResponseDto uploadProfilePicture(MultipartFile file) {
         User user = currentUserProvider.get();
         String oldImageUrl = user.getProfilePicture();
         try {
@@ -60,7 +65,7 @@ public class UserService implements IUserService {
             if (oldImageUrl != null) {
                 cloudinaryService.deleteImageFromCloudinary(oldImageUrl);
             }
-            return userMapper.toUserProfileResponseDto(savedUser);
+            return userMapper.toUserProfilePictureDto(savedUser);
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload profile picture: " + e.getMessage(), e);
         }
@@ -85,5 +90,17 @@ public class UserService implements IUserService {
 
         user.setAvailableSlots(currentSlots + quantity);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserStatsResponseDto getUserStats() {
+        User currentUser = currentUserProvider.get();
+
+        return UserStatsResponseDto.builder()
+                .availableSlots(currentUser.getAvailableSlots())
+                .totalUrlsCreated(urlRepository.countByUser(currentUser))
+                .activeUrls(urlRepository.countByUserAndIsExpiredFalse(currentUser))
+                .totalClicksReceived(urlRepository.sumClicksByUser(currentUser))
+                .build();
     }
 }

@@ -53,4 +53,11 @@ public interface UrlRepository extends JpaRepository<Url, UUID>, JpaSpecificatio
                                           @Param("now") LocalDateTime now);
 
     Page<Url> findByUser(User user, Pageable pageable);
+
+    Long countByUser(User user);
+
+    Long countByUserAndIsExpiredFalse(User user);
+
+    @Query("SELECT COALESCE(SUM(u.totalVisits), 0) FROM Url u WHERE u.user = :user")
+    Long sumClicksByUser(@Param("user") User user);
 }

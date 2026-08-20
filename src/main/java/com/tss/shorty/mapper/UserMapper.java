@@ -2,8 +2,10 @@ package com.tss.shorty.mapper;
 
 import com.tss.shorty.entity.User;
 import com.tss.shorty.payload.request.RegistrationRequestDto;
+import com.tss.shorty.payload.response.UserProfilePictureResponseDto;
 import com.tss.shorty.payload.response.UserProfileResponseDto;
 import com.tss.shorty.payload.response.UserSummaryDto;
+import com.tss.shorty.payload.response.UserUpdateResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -26,4 +28,7 @@ public interface UserMapper
 
     UserSummaryDto toUserSummaryDto(User user);
 
+    UserProfilePictureResponseDto toUserProfilePictureDto(User user);
+
+    UserUpdateResponseDto toUserUpdateResponseDto(User user);
 }
