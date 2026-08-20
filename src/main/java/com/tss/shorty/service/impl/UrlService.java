@@ -12,6 +12,7 @@ import com.tss.shorty.payload.request.UrlRequestDto;
 import com.tss.shorty.payload.request.UrlUpdateDto;
 import com.tss.shorty.payload.response.*;
 import com.tss.shorty.repository.UrlRepository;
+import com.tss.shorty.service.CurrentUserProvider;
 import com.tss.shorty.service.IUrlService;
 import com.tss.shorty.factory.UrlFactory;
 import com.tss.shorty.service.UrlCacheService;
@@ -168,7 +169,7 @@ public class UrlService implements IUrlService {
         urlRepository.save(url);
     }
 
-    public String resolveLongUrlFromShortUrl(String shortCode)  {
+    public String resolveLongUrlFromShortUrl(String shortCode) {
         UrlCacheResponseDto urlCacheResponseDto = urlCacheService.getCachedUrl(shortCode);
 
         if (urlCacheResponseDto.getExpiryDate().isBefore(LocalDateTime.now())) {
@@ -193,5 +194,4 @@ public class UrlService implements IUrlService {
             urlRepository.save(url);
         });
     }
-
 }

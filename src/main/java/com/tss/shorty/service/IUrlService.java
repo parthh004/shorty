@@ -3,10 +3,7 @@ package com.tss.shorty.service;
 import com.tss.shorty.entity.User;
 import com.tss.shorty.payload.request.UrlRequestDto;
 import com.tss.shorty.payload.request.UrlUpdateDto;
-import com.tss.shorty.payload.response.PaginatedDto;
-import com.tss.shorty.payload.response.UrlAliasCheckResponseDto;
-import com.tss.shorty.payload.response.UrlDetailResponseDto;
-import com.tss.shorty.payload.response.UrlResponseDto;
+import com.tss.shorty.payload.response.*;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
